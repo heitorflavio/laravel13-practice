@@ -2,113 +2,87 @@
 
 namespace App\Livewire\Documents;
 
+use App\Actions\Documents\DeleteFileAction;
+use App\Actions\Documents\SaveFilesAction;
+use App\Actions\Documents\SummarizeDocumentAction;
+use App\Actions\Documents\UpdateDocumentAction;
+use App\DTOs\Documents\SaveFilesData;
+use App\DTOs\Documents\UpdateDocumentData;
+use App\Models\Document;
+use App\Models\File;
 use Flux\Flux;
-use Illuminate\Support\Facades\Storage;
-use Livewire\WithFileUploads;
-use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Title;
 use Livewire\Component;
-use App\Jobs\SummarizeDocument;
-use App\Jobs\SummarizeFile;
-use App\Models\Document;
-use App\Models\File;
+use Livewire\WithFileUploads;
 
 #[Title('Edit document')]
 class EditDocuments extends Component
 {
     use WithFileUploads;
 
-    public $id;
-    public $title;
-    public $content;
-
+    public int $id;
+    public string $title;
+    public string $content;
     public Document $document;
+    public array $files = [];
 
-    public $files = [];
-
-    public function mount($id)
+    public function mount(int $id): void
     {
         $document = auth()->user()->documents()->findOrFail($id);
 
         $this->document = $document;
-        $this->id = $document->id;
-        $this->title = $document->name;
-        $this->content = $document->content ?? '';
+        $this->id       = $document->id;
+        $this->title    = $document->name;
+        $this->content  = $document->content ?? '';
     }
 
-    public function save()
+    public function save(UpdateDocumentAction $action): void
     {
         try {
-            DB::beginTransaction();
             $document = auth()->user()->documents()->findOrFail($this->id);
-            $document->update([
-                'name' => $this->title,
-                'content' => $this->content,
-            ]);
-            DB::commit();
+            $action->handle($document, new UpdateDocumentData(
+                name: $this->title,
+                content: $this->content,
+            ));
             Flux::toast(variant: 'success', text: __('Document updated successfully.'));
         } catch (\Exception $e) {
-            DB::rollBack();
             Flux::toast(variant: 'danger', text: __('Error updating document: ') . $e->getMessage());
         }
     }
 
-    public function removeFile($index)
+    public function removeFile(int $index): void
     {
         unset($this->files[$index]);
         $this->files = array_values($this->files);
     }
 
-    public function saveFiles()
+    public function saveFiles(SaveFilesAction $action): void
     {
         $this->validate([
-            'files.*' => 'file|max:10240' // 10MB
+            'files.*' => 'file|max:10240',
         ]);
 
         try {
-            DB::beginTransaction();
+            $action->handle(new SaveFilesData(
+                documentId: $this->document->id,
+                files: $this->files,
+            ));
 
-            foreach ($this->files as $file) {
-
-                $path = $file->store('documents', 'public');
-
-                $fileRecord = File::create([
-                    'document_id' => $this->document->id,
-                    'file_path' => $path,
-                    'file_url' => Storage::disk('public')->url($path),
-                    'mime_type' => $file->getClientMimeType(),
-                ]);
-
-                SummarizeFile::dispatch($fileRecord);
-            }
-
-            DB::commit();
-
-            // limpa input
             $this->files = [];
-
-            // atualiza lista
             $this->document->refresh();
 
             Flux::toast(variant: 'success', text: 'Arquivos enviados com sucesso!');
         } catch (\Exception $e) {
-            DB::rollBack();
-
             Flux::toast(variant: 'danger', text: $e->getMessage());
         }
     }
 
-    public function deleteFile($id)
+    public function deleteFile(int $id, DeleteFileAction $action): void
     {
         $file = File::findOrFail($id);
-
-        Storage::disk('public')->delete($file->path);
-
-        $file->delete();
-
+        $action->handle($file);
         $this->document->refresh();
-
         Flux::toast(variant: 'success', text: 'Arquivo removido!');
     }
 
@@ -127,16 +101,14 @@ class EditDocuments extends Component
         $this->title = $this->document->name;
     }
 
-    public function summarizeDocument()
+    public function summarizeDocument(SummarizeDocumentAction $action): void
     {
-        $hasSummaries = $this->document->files()->whereNotNull('ia_resume')->exists();
-
-        if (! $hasSummaries) {
+        if (! $this->document->files()->whereNotNull('ia_resume')->exists()) {
             Flux::toast(variant: 'warning', text: 'Nenhum arquivo com resumo disponível ainda.');
             return;
         }
 
-        SummarizeDocument::dispatch($this->document);
+        $action->handle($this->document);
 
         Flux::toast(variant: 'success', text: 'Resumo do documento sendo gerado em segundo plano.');
     }
