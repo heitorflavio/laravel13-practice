@@ -18,9 +18,9 @@ class SaveFilesAction
 
                 $fileRecord = File::create([
                     'document_id' => $data->documentId,
-                    'file_path'   => $path,
-                    'file_url'    => Storage::disk('public')->url($path),
-                    'mime_type'   => $file->getClientMimeType(),
+                    'file_path' => $path,
+                    'file_url' => Storage::disk('public')->url($path),
+                    'mime_type' => $file->getClientMimeType(),
                 ]);
 
                 SummarizeFile::dispatch($fileRecord);

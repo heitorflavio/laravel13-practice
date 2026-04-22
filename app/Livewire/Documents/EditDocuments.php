@@ -22,9 +22,13 @@ class EditDocuments extends Component
     use WithFileUploads;
 
     public int $id;
+
     public string $title;
+
     public string $content;
+
     public Document $document;
+
     /** @var array<int, mixed> */
     public array $files = [];
 
@@ -33,9 +37,9 @@ class EditDocuments extends Component
         $document = auth()->user()->documents()->findOrFail($id);
 
         $this->document = $document;
-        $this->id       = $document->id;
-        $this->title    = $document->name;
-        $this->content  = $document->content ?? '';
+        $this->id = $document->id;
+        $this->title = $document->name;
+        $this->content = $document->content ?? '';
     }
 
     public function save(UpdateDocumentAction $action): void
@@ -48,7 +52,7 @@ class EditDocuments extends Component
             ));
             Flux::toast(variant: 'success', text: __('Document updated successfully.'));
         } catch (\Exception $e) {
-            Flux::toast(variant: 'danger', text: __('Error updating document: ') . $e->getMessage());
+            Flux::toast(variant: 'danger', text: __('Error updating document: ').$e->getMessage());
         }
     }
 
@@ -106,6 +110,7 @@ class EditDocuments extends Component
     {
         if (! $this->document->files()->whereNotNull('ia_resume')->exists()) {
             Flux::toast(variant: 'warning', text: 'Nenhum arquivo com resumo disponível ainda.');
+
             return;
         }
 

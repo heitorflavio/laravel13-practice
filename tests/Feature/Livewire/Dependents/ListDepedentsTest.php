@@ -17,7 +17,7 @@ test('authenticated user can render the component', function () {
 });
 
 test('deletes own dependent', function () {
-    $user      = User::factory()->create();
+    $user = User::factory()->create();
     $dependent = User::factory()->create(['parent_id' => $user->id]);
 
     Livewire::actingAs($user)
@@ -28,8 +28,8 @@ test('deletes own dependent', function () {
 });
 
 test('cannot delete dependent belonging to another user', function () {
-    $user      = User::factory()->create();
-    $other     = User::factory()->create();
+    $user = User::factory()->create();
+    $other = User::factory()->create();
     $dependent = User::factory()->create(['parent_id' => $other->id]);
 
     Livewire::actingAs($user)

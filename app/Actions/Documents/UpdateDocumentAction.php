@@ -12,7 +12,7 @@ class UpdateDocumentAction
     {
         return DB::transaction(function () use ($document, $data) {
             $document->update([
-                'name'    => $data->name,
+                'name' => $data->name,
                 'content' => $data->content,
             ]);
 

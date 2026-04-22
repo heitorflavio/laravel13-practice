@@ -19,7 +19,7 @@ test('validates required fields', function () {
 
 test('validates email is unique', function () {
     $existing = User::factory()->create();
-    $user     = User::factory()->create();
+    $user = User::factory()->create();
 
     Livewire::actingAs($user)
         ->test(CreateDepedents::class)
@@ -57,7 +57,7 @@ test('creates dependent and redirects on valid data', function () {
         ->assertRedirect(route('dependents.index'));
 
     $this->assertDatabaseHas('users', [
-        'email'     => 'john@example.com',
+        'email' => 'john@example.com',
         'parent_id' => $user->id,
     ]);
 });

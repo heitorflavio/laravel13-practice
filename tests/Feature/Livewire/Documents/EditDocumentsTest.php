@@ -6,16 +6,17 @@ use App\Livewire\Documents\EditDocuments;
 use App\Models\Document;
 use App\Models\File;
 use App\Models\User;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Livewire;
 
 test('mounts with document data', function () {
-    $user     = User::factory()->create();
+    $user = User::factory()->create();
     $document = Document::factory()->create([
         'user_id' => $user->id,
-        'name'    => 'My Exam',
+        'name' => 'My Exam',
     ]);
 
     Livewire::actingAs($user)
@@ -25,16 +26,16 @@ test('mounts with document data', function () {
 });
 
 test('cannot mount with another user document', function () {
-    $user     = User::factory()->create();
-    $other    = User::factory()->create();
+    $user = User::factory()->create();
+    $other = User::factory()->create();
     $document = Document::factory()->create(['user_id' => $other->id]);
 
     Livewire::actingAs($user)
         ->test(EditDocuments::class, ['id' => $document->id]);
-})->throws(\Illuminate\Database\Eloquent\ModelNotFoundException::class);
+})->throws(ModelNotFoundException::class);
 
 test('saves document with updated name', function () {
-    $user     = User::factory()->create();
+    $user = User::factory()->create();
     $document = Document::factory()->create(['user_id' => $user->id]);
 
     Livewire::actingAs($user)
@@ -43,7 +44,7 @@ test('saves document with updated name', function () {
         ->call('save');
 
     $this->assertDatabaseHas('documents', [
-        'id'   => $document->id,
+        'id' => $document->id,
         'name' => 'Updated Title',
     ]);
 });
@@ -52,9 +53,9 @@ test('uploads files and dispatches summarize jobs', function () {
     Storage::fake('public');
     Queue::fake();
 
-    $user     = User::factory()->create();
+    $user = User::factory()->create();
     $document = Document::factory()->create(['user_id' => $user->id]);
-    $file     = UploadedFile::fake()->create('exam.pdf', 100, 'application/pdf');
+    $file = UploadedFile::fake()->create('exam.pdf', 100, 'application/pdf');
 
     Livewire::actingAs($user)
         ->test(EditDocuments::class, ['id' => $document->id])
@@ -68,11 +69,11 @@ test('uploads files and dispatches summarize jobs', function () {
 test('deletes a file', function () {
     Storage::fake('public');
 
-    $user     = User::factory()->create();
+    $user = User::factory()->create();
     $document = Document::factory()->create(['user_id' => $user->id]);
-    $file     = File::factory()->create([
+    $file = File::factory()->create([
         'document_id' => $document->id,
-        'file_path'   => 'documents/test.pdf',
+        'file_path' => 'documents/test.pdf',
     ]);
     Storage::disk('public')->put('documents/test.pdf', 'content');
 
@@ -87,7 +88,7 @@ test('deletes a file', function () {
 test('dispatches summarize document job when files have resumes', function () {
     Queue::fake();
 
-    $user     = User::factory()->create();
+    $user = User::factory()->create();
     $document = Document::factory()->create(['user_id' => $user->id]);
     File::factory()->done()->create(['document_id' => $document->id]);
 
@@ -101,7 +102,7 @@ test('dispatches summarize document job when files have resumes', function () {
 test('does not dispatch summarize job when no file has a resume', function () {
     Queue::fake();
 
-    $user     = User::factory()->create();
+    $user = User::factory()->create();
     $document = Document::factory()->create(['user_id' => $user->id]);
     File::factory()->create(['document_id' => $document->id]);
 

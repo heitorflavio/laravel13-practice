@@ -10,7 +10,7 @@ test('dispatches SummarizeDocument job', function () {
 
     $document = Document::factory()->create();
 
-    (new SummarizeDocumentAction())->handle($document);
+    (new SummarizeDocumentAction)->handle($document);
 
     Queue::assertPushed(SummarizeDocument::class);
 });

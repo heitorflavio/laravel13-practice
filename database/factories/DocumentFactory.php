@@ -11,8 +11,8 @@ class DocumentFactory extends Factory
     {
         return [
             'user_id' => User::factory(),
-            'name'    => fake()->words(3, true),
-            'type'    => 'exam',
+            'name' => fake()->words(3, true),
+            'type' => 'exam',
         ];
     }
 

@@ -8,6 +8,7 @@ use Livewire\Component;
 #[Title('Create document')]
 class CreateDocument extends Component
 {
-    public string $title   = '';
+    public string $title = '';
+
     public string $content = '';
 }

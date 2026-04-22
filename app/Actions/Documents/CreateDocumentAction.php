@@ -13,7 +13,7 @@ class CreateDocumentAction
 
         return Document::create([
             'user_id' => $data->userId,
-            'name'    => 'New Document ' . ($count + 1),
+            'name' => 'New Document '.($count + 1),
         ]);
     }
 }

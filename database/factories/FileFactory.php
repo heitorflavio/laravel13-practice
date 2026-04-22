@@ -11,17 +11,17 @@ class FileFactory extends Factory
     {
         return [
             'document_id' => Document::factory(),
-            'file_path'   => 'documents/' . fake()->uuid() . '.pdf',
-            'file_url'    => 'http://localhost/storage/documents/test.pdf',
-            'mime_type'   => 'application/pdf',
-            'status'      => 'pending',
+            'file_path' => 'documents/'.fake()->uuid().'.pdf',
+            'file_url' => 'http://localhost/storage/documents/test.pdf',
+            'mime_type' => 'application/pdf',
+            'status' => 'pending',
         ];
     }
 
     public function done(): static
     {
         return $this->state([
-            'status'    => 'done',
+            'status' => 'done',
             'ia_resume' => fake()->paragraph(),
         ]);
     }

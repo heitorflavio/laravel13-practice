@@ -2,10 +2,13 @@
 
 namespace App\Livewire;
 
+use App\Models\Document;
+use App\Models\File;
+use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Title;
 use Livewire\Component;
-use App\Models\File;
 
 #[Title('Dashboard')]
 class Dashboard extends Component
@@ -18,12 +21,12 @@ class Dashboard extends Component
 
         $documentIds = $user->documents()->pluck('id');
 
-        $totalDocuments  = $documentIds->count();
-        $totalFiles      = File::whereIn('document_id', $documentIds)->count();
+        $totalDocuments = $documentIds->count();
+        $totalFiles = File::whereIn('document_id', $documentIds)->count();
         $totalDependents = $user->dependents()->count();
         $filesWithResume = File::whereIn('document_id', $documentIds)->where('status', 'done')->count();
-        $filesPending    = File::whereIn('document_id', $documentIds)->whereIn('status', ['pending', 'processing'])->count();
-        $docsWithResume  = $user->documents()->whereNotNull('ia_resume')->count();
+        $filesPending = File::whereIn('document_id', $documentIds)->whereIn('status', ['pending', 'processing'])->count();
+        $docsWithResume = $user->documents()->whereNotNull('ia_resume')->count();
 
         return compact(
             'totalDocuments',
@@ -35,9 +38,9 @@ class Dashboard extends Component
         );
     }
 
-    /** @return \Illuminate\Database\Eloquent\Collection<int, \App\Models\Document> */
+    /** @return Collection<int, Document> */
     #[Computed]
-    public function recentDocuments(): \Illuminate\Database\Eloquent\Collection
+    public function recentDocuments(): Collection
     {
         return auth()->user()
             ->documents()
@@ -47,9 +50,9 @@ class Dashboard extends Component
             ->get();
     }
 
-    /** @return \Illuminate\Database\Eloquent\Collection<int, \App\Models\User> */
+    /** @return Collection<int, User> */
     #[Computed]
-    public function dependents(): \Illuminate\Database\Eloquent\Collection
+    public function dependents(): Collection
     {
         return auth()->user()->dependents()->latest()->get();
     }

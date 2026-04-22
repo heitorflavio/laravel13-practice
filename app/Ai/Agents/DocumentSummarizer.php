@@ -31,12 +31,12 @@ class DocumentSummarizer implements Agent, HasStructuredOutput
     public function schema(JsonSchema $schema): array
     {
         return [
-            'name'        => $schema->string()->required(),
-            'summary'     => $schema->string()->required(),
-            'date'        => $schema->string()->required(),
+            'name' => $schema->string()->required(),
+            'summary' => $schema->string()->required(),
+            'date' => $schema->string()->required(),
             'doctor_name' => $schema->string()->required(),
-            'specialty'   => $schema->string()->required(),
-            'cid10'       => $schema->string()->required(),
+            'specialty' => $schema->string()->required(),
+            'cid10' => $schema->string()->required(),
         ];
     }
 }

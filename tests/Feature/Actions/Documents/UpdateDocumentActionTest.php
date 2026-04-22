@@ -6,16 +6,16 @@ use App\Models\Document;
 use App\Models\User;
 
 test('updates document name', function () {
-    $user     = User::factory()->create();
+    $user = User::factory()->create();
     $document = Document::factory()->create(['user_id' => $user->id]);
 
-    (new UpdateDocumentAction())->handle($document, new UpdateDocumentData(
-        name:    'New Name',
+    (new UpdateDocumentAction)->handle($document, new UpdateDocumentData(
+        name: 'New Name',
         content: '',
     ));
 
     $this->assertDatabaseHas('documents', [
-        'id'   => $document->id,
+        'id' => $document->id,
         'name' => 'New Name',
     ]);
 });
@@ -23,8 +23,8 @@ test('updates document name', function () {
 test('returns the updated document', function () {
     $document = Document::factory()->create();
 
-    $updated = (new UpdateDocumentAction())->handle($document, new UpdateDocumentData(
-        name:    'Updated',
+    $updated = (new UpdateDocumentAction)->handle($document, new UpdateDocumentData(
+        name: 'Updated',
         content: '',
     ));
 

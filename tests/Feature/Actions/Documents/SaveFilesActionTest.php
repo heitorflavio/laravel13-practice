@@ -13,19 +13,19 @@ test('stores files and persists records to database', function () {
     Storage::fake('public');
     Queue::fake();
 
-    $user     = User::factory()->create();
+    $user = User::factory()->create();
     $document = Document::factory()->create(['user_id' => $user->id]);
-    $file     = UploadedFile::fake()->create('exam.pdf', 100, 'application/pdf');
+    $file = UploadedFile::fake()->create('exam.pdf', 100, 'application/pdf');
 
-    (new SaveFilesAction())->handle(new SaveFilesData(
+    (new SaveFilesAction)->handle(new SaveFilesData(
         documentId: $document->id,
-        files:      [$file],
+        files: [$file],
     ));
 
     $this->assertDatabaseHas('files', [
         'document_id' => $document->id,
-        'mime_type'   => 'application/pdf',
-        'status'      => 'pending',
+        'mime_type' => 'application/pdf',
+        'status' => 'pending',
     ]);
 });
 
@@ -34,14 +34,14 @@ test('dispatches SummarizeFile job for each uploaded file', function () {
     Queue::fake();
 
     $document = Document::factory()->create();
-    $files    = [
+    $files = [
         UploadedFile::fake()->create('a.pdf', 50, 'application/pdf'),
         UploadedFile::fake()->create('b.pdf', 50, 'application/pdf'),
     ];
 
-    (new SaveFilesAction())->handle(new SaveFilesData(
+    (new SaveFilesAction)->handle(new SaveFilesData(
         documentId: $document->id,
-        files:      $files,
+        files: $files,
     ));
 
     Queue::assertPushed(SummarizeFile::class, 2);

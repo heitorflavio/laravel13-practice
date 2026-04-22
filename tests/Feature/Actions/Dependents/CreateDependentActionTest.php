@@ -8,9 +8,9 @@ use Illuminate\Support\Facades\Hash;
 test('creates a dependent user linked to the parent', function () {
     $parent = User::factory()->create();
 
-    $dependent = (new CreateDependentAction())->handle(new CreateDependentData(
-        name:     'John Doe',
-        email:    'john@example.com',
+    $dependent = (new CreateDependentAction)->handle(new CreateDependentData(
+        name: 'John Doe',
+        email: 'john@example.com',
         password: 'password123',
         parentId: $parent->id,
     ));
@@ -21,16 +21,16 @@ test('creates a dependent user linked to the parent', function () {
         ->and($dependent->email)->toBe('john@example.com');
 
     $this->assertDatabaseHas('users', [
-        'email'     => 'john@example.com',
+        'email' => 'john@example.com',
         'parent_id' => $parent->id,
     ]);
 });
 
 test('hashes the dependent password', function () {
-    $parent    = User::factory()->create();
-    $dependent = (new CreateDependentAction())->handle(new CreateDependentData(
-        name:     'Jane',
-        email:    'jane@example.com',
+    $parent = User::factory()->create();
+    $dependent = (new CreateDependentAction)->handle(new CreateDependentData(
+        name: 'Jane',
+        email: 'jane@example.com',
         password: 'secret123',
         parentId: $parent->id,
     ));

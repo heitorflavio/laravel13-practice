@@ -1,12 +1,12 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Livewire\Dashboard;
-use App\Livewire\Dependents\ListDepedents;
 use App\Livewire\Dependents\CreateDepedents;
+use App\Livewire\Dependents\ListDepedents;
 use App\Livewire\Documents\CreateDocument;
-use App\Livewire\Documents\ListDocuments;
 use App\Livewire\Documents\EditDocuments;
+use App\Livewire\Documents\ListDocuments;
+use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome')->name('home');
 

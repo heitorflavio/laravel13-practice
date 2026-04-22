@@ -28,7 +28,7 @@ test('creates a new document for the authenticated user', function () {
 });
 
 test('deletes own document', function () {
-    $user     = User::factory()->create();
+    $user = User::factory()->create();
     $document = Document::factory()->create(['user_id' => $user->id]);
 
     Livewire::actingAs($user)
@@ -39,8 +39,8 @@ test('deletes own document', function () {
 });
 
 test('cannot delete another user document', function () {
-    $user     = User::factory()->create();
-    $other    = User::factory()->create();
+    $user = User::factory()->create();
+    $other = User::factory()->create();
     $document = Document::factory()->create(['user_id' => $other->id]);
 
     Livewire::actingAs($user)

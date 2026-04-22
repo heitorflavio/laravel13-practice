@@ -12,7 +12,7 @@ test('removes file from storage and database', function () {
 
     $file = File::factory()->create(['file_path' => $path]);
 
-    (new DeleteFileAction())->handle($file);
+    (new DeleteFileAction)->handle($file);
 
     Storage::disk('public')->assertMissing($path);
     $this->assertDatabaseMissing('files', ['id' => $file->id]);
@@ -23,7 +23,7 @@ test('deletes database record even when file does not exist in storage', functio
 
     $file = File::factory()->create(['file_path' => 'documents/missing.pdf']);
 
-    (new DeleteFileAction())->handle($file);
+    (new DeleteFileAction)->handle($file);
 
     $this->assertDatabaseMissing('files', ['id' => $file->id]);
 });
