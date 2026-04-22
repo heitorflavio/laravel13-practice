@@ -10,6 +10,7 @@ use App\Models\File;
 #[Title('Dashboard')]
 class Dashboard extends Component
 {
+    /** @return array<string, int> */
     #[Computed]
     public function stats(): array
     {
@@ -34,8 +35,9 @@ class Dashboard extends Component
         );
     }
 
+    /** @return \Illuminate\Database\Eloquent\Collection<int, \App\Models\Document> */
     #[Computed]
-    public function recentDocuments()
+    public function recentDocuments(): \Illuminate\Database\Eloquent\Collection
     {
         return auth()->user()
             ->documents()
@@ -45,8 +47,9 @@ class Dashboard extends Component
             ->get();
     }
 
+    /** @return \Illuminate\Database\Eloquent\Collection<int, \App\Models\User> */
     #[Computed]
-    public function dependents()
+    public function dependents(): \Illuminate\Database\Eloquent\Collection
     {
         return auth()->user()->dependents()->latest()->get();
     }

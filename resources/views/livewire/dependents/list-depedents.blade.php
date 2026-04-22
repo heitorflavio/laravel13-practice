@@ -56,7 +56,7 @@
                                     wire:click="delete({{ $dependent->id }})"
                                     wire:confirm="Tem certeza que deseja excluir {{ $dependent->name }}?"
                                 />
-                                <flux:dropdown>
+                                {{-- <flux:dropdown>
                                     <flux:button variant="ghost" size="sm" icon="ellipsis-horizontal" />
                                     <flux:menu>
                                         <flux:menu.item icon="eye" wire:click="view({{ $dependent->id }})">
@@ -66,7 +66,7 @@
                                             Entrar como
                                         </flux:menu.item>
                                     </flux:menu>
-                                </flux:dropdown>
+                                </flux:dropdown> --}}
                             </div>
                         </flux:table.cell>
 

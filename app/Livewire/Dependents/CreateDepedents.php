@@ -4,9 +4,11 @@ namespace App\Livewire\Dependents;
 
 use App\Actions\Dependents\CreateDependentAction;
 use App\DTOs\Dependents\CreateDependentData;
-use Flux\Flux;
+use Livewire\Features\SupportRedirects\Redirector;
+use Illuminate\Http\RedirectResponse;
 use Livewire\Attributes\Title;
 use Livewire\Component;
+use Flux\Flux;
 
 #[Title('Create dependents')]
 class CreateDepedents extends Component
@@ -16,7 +18,7 @@ class CreateDepedents extends Component
     public string $password              = '';
     public string $password_confirmation = '';
 
-    public function create(CreateDependentAction $action)
+    public function create(CreateDependentAction $action): Redirector|RedirectResponse
     {
         $this->validate([
             'name'     => 'required|string|max:255',
@@ -33,10 +35,10 @@ class CreateDepedents extends Component
             ));
 
             Flux::toast(variant: 'success', text: __('Dependent created successfully.'));
-
-            return redirect()->route('dependents.index');
         } catch (\Exception $e) {
             Flux::toast(variant: 'danger', text: __('Error creating dependent: ') . $e->getMessage());
         }
+
+        return redirect()->route('dependents.index');
     }
 }

@@ -14,8 +14,9 @@ class ListDepedents extends Component
 {
     use WithPagination;
 
+    /** @return \Illuminate\Pagination\LengthAwarePaginator<int, \App\Models\User> */
     #[Computed]
-    public function dependents()
+    public function dependents(): \Illuminate\Pagination\LengthAwarePaginator
     {
         return auth()->user()
             ->dependents()

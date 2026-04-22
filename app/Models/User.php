@@ -7,6 +7,8 @@ use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
@@ -44,26 +46,20 @@ class User extends Authenticatable
             ->implode('');
     }
 
-    /**
-     * Os usuários dependentes (filhos)
-     */
-    public function dependents()
+    /** @return HasMany<User, $this> */
+    public function dependents(): HasMany
     {
         return $this->hasMany(User::class, 'parent_id');
     }
 
-    /**
-     * O usuário pai (se existir)
-     */
-    public function parent()
+    /** @return BelongsTo<User, $this> */
+    public function parent(): BelongsTo
     {
         return $this->belongsTo(User::class, 'parent_id');
     }
 
-    /**
-     * Os documentos associados ao usuário
-     */
-    public function documents()
+    /** @return HasMany<Document, $this> */
+    public function documents(): HasMany
     {
         return $this->hasMany(Document::class);
     }

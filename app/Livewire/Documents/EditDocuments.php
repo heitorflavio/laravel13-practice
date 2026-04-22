@@ -25,6 +25,7 @@ class EditDocuments extends Component
     public string $title;
     public string $content;
     public Document $document;
+    /** @var array<int, mixed> */
     public array $files = [];
 
     public function mount(int $id): void

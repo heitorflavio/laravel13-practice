@@ -199,6 +199,7 @@ class Security extends Component
     /**
      * Get the current modal configuration state.
      */
+    /** @return array<string, string> */
     #[Computed]
     public function modalConfig(): array
     {

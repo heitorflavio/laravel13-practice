@@ -9,12 +9,15 @@ use Flux\Flux;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Title;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 #[Title('List documents')]
 class ListDocuments extends Component
 {
+    use WithPagination;
+    /** @return \Illuminate\Pagination\LengthAwarePaginator<int, \App\Models\Document> */
     #[Computed]
-    public function documents()
+    public function documents(): \Illuminate\Pagination\LengthAwarePaginator
     {
         return auth()->user()
             ->documents()

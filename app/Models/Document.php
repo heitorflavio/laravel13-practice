@@ -2,26 +2,27 @@
 
 namespace App\Models;
 
+use Database\Factories\DocumentFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 #[Fillable(['user_id', 'name', 'date', 'doctor_name', 'specialty', 'cid10', 'ia_resume', 'type'])]
 class Document extends Model
 {
+    /** @use HasFactory<DocumentFactory> */
     use HasFactory;
-    /**
-     * O usuário associado ao documento
-     */
-    public function user()
+
+    /** @return BelongsTo<User, $this> */
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    /**
-     * Os arquivos associados ao documento
-     */
-    public function files()
+    /** @return HasMany<File, $this> */
+    public function files(): HasMany
     {
         return $this->hasMany(File::class);
     }
